@@ -10,3 +10,5 @@ usr/share/asterisk/static-http/*
 
 # broken (repeats itself), and changing 50 -> 40 maybe an issue
 usr/share/dahdi/span_config.d/40-asterisk
+
+etc/modules-load.d/asl3-oss.conf

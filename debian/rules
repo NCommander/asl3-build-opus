@@ -73,6 +73,8 @@ ADDONS_ENABLE += chan_ooh323
 ADDONS_ENABLE += format_mp3
 ADDONS_ENABLE += res_config_mysql
 ADDONS_ENABLE += smsq
+ADDONS_ENABLE += codec_opus_open_source
+ADDONS_ENABLE += format_ogg_opus_open_source
 
 ADDONS_DISABLE += BUILD_NATIVE
 

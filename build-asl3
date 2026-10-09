@@ -126,6 +126,7 @@ shift $((OPTIND-1))
 BASE_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 ASL3_ASTERISK_DIR="${BASE_DIR}/asl3-asterisk"
 ASTERISK_DIR="${BASE_DIR}/asterisk"
+ASTERISK_OPUS_DIR="${BASE_DIR}/asterisk-opus"
 APP_RPT_DIR="${BASE_DIR}/app_rpt"
 
 if [[ -z "${AST_VER}" ]]; then
@@ -638,6 +639,13 @@ add_asl3-asterisk()
     fi
 }
 
+add_asterisk_opus()
+{
+	if [[ ! -d "${ASTERISK_OPUS_DIR}" ]]; then
+	echo "Cloning \"asterisk-opus\""
+	git clone https://github.com/traud/asterisk-opus "${ASTERISK_OPUS_DIR}"
+	fi
+}
 add_testsuite()
 {
     if [[ ! -d "${TESTSUITE_DIR}" ]]; then
@@ -662,6 +670,15 @@ merge_asterisk()
     copy_path "${ASTERISK_DIR}"		"${MERGE_DIR}"
 }
 
+merge_asterisk_opus()
+{
+	pushd "${ASTERISK_OPUS_DIR}"
+	copy_path "codecs"	"${MERGE_DIR}/codecs"
+	copy_path "formats"	"${MERGE_DIR}/formats"
+	copy_path "res"	"${MERGE_DIR}/res"
+	
+	popd
+}
 merge_app_rpt()
 {
     if [[ $MERGE_EMPTY -eq 0 ]]; then
@@ -779,6 +796,9 @@ prepare_build_directory()
 
     echo "Add \"debian\", \"rpt-sounds\""
     merge_asl3_asterisk
+
+	echo "Merging in Opus support"
+	merge_asterisk_opus
 
     pushd "${MERGE_DIR}"
 
@@ -946,6 +966,9 @@ do_source()
 
     # Make sure that we have a copy of the "asl3-asterisk" repo
     add_asl3-asterisk
+
+	# Grab the Opus directory
+	add_asterisk_opus
 
     # If testing, make sure that we have a copy of the Asterisk "testsuite" repo
     if [[ $DO_TEST -ne 0 ]]; then
